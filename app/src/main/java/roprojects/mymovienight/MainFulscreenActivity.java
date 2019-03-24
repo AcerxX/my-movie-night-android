@@ -1,7 +1,11 @@
 package roprojects.mymovienight;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,6 +24,7 @@ public class MainFulscreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        createNotificationChannel();
 
         setContentView(R.layout.activity_main_fulscreen);
 
@@ -40,6 +45,32 @@ public class MainFulscreenActivity extends AppCompatActivity {
         WebViewClientImpl webViewClient = new WebViewClientImpl(this);
         webView.setWebViewClient(webViewClient);
         webView.loadUrl("http://80.211.24.165");
+    }
+
+    private void sendNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "test_notification")
+                .setSmallIcon(R.drawable.ic_all_out_black_24dp)
+                .setContentTitle("TEST TITLU")
+                .setContentText("TEST TEXT CONTENT")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setCategory(NotificationCompat.CATEGORY_ALARM);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(100, builder.build());
+    }
+
+    private void createNotificationChannel() {
+        CharSequence name = "test_notification";
+        String description = "Test notifications for my movie night";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel("test_notification", name, importance);
+        channel.setDescription(description);
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
     private void addWakeLock() {
